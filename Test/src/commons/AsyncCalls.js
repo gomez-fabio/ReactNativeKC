@@ -1,5 +1,16 @@
 import axios from 'axios'
 
-export function fetchHouseList() {
-  return axios.get('http://146.185.137.85/got/web/casas')
+export function fetchHousesList() {
+    const fetchUrl = '/casas'
+    return axios.get(fetchUrl)        
+    .then((response) => {
+        console.log("axios get response: ", response);
+        const nuestraLista = response.data && response.data.records ? response.data.records : []
+        return nuestraLista
+        
+    })
+    .catch((error) => {
+        console.log("axios get error: ", error);
+        return []
+    });
 }

@@ -1,5 +1,7 @@
 import * as AsyncCalls from './AsyncCalls'
+import * as Colors from './Colors'
 
-export default {
-  AsyncCalls
+export {
+    AsyncCalls,
+    Colors,
 }
