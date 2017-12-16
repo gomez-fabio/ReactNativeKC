@@ -1,7 +1,7 @@
-import * as AsyncCalls from './AsyncCalls'
+goimport * as AsyncCalls from './AsyncCalls'
 import * as Colors from './Colors'
 
 export {
-    AsyncCalls,
-    Colors,
+  AsyncCalls,
+  Colors
 }

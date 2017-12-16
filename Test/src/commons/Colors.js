@@ -1,2 +1,2 @@
-export const red = 'red'
-export const pink = 'pink'
+export const grey = 'grey'
+export const blue = 'blue'
