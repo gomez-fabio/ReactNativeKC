@@ -1,4 +1,4 @@
-goimport * as AsyncCalls from './AsyncCalls'
+import * as AsyncCalls from './AsyncCalls'
 import * as Colors from './Colors'
 
 export {
