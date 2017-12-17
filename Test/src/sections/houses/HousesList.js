@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
-import { AsyncCalls, Colors } from 'Test/src/commons'
+import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { AsyncCalls, Colors } from 'Test/src/commons';
+import { fetch } from 'Test/src/webservices/webservices';
+import HousesCell from './HousesCell'
 
 export default class HousesList extends Component {
 
@@ -13,16 +15,11 @@ export default class HousesList extends Component {
   }
 
   componentWillMount() {
-    console.log("AsyncCalls: ", AsyncCalls)
-    AsyncCalls.fetchHousesList()
-    .then((response) => {
-      console.log("axios get response: ",response);
-      const miLista = response.data && response.data.records ? response.data.records : []
-      this.setState({ list: miLista })
-    })
-    .catch((error) => {
-      console.log("axios get error: ",error);
-    });
+    fetch('/casas').then( response => {
+      this.setState({ list: response.records })
+    } ). catch ( error => {
+      console.log("error: ", error)
+    } )
   }
 
   checkIsSelected(item) {
@@ -44,13 +41,17 @@ export default class HousesList extends Component {
         <Text style ={titleStyle} >{ item.nombre }</Text>
         <Text style ={titleStyle} >{ item.lema }</Text>
         <Text style ={titleStyle} >{ index }</Text>
-        <Button 
+        {/* <Button 
           title = {'Seleccionar casa'}
           // onPress = {()=> console.log("celda pulsada: ", item)}
           onPress = {()=> this.setState({ selected: item })}
           color={'white'}
-        />
-        {/* <Image>{ item.image_dir.Image }</Image> */}
+        /> */}
+
+        <TouchableOpacity style={styles.button} onPress= { () => this.setState( {selected: item} ) }>
+        
+          <Text style={styles.buttonText}>{'Seleccionar casa'}</Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -58,10 +59,11 @@ export default class HousesList extends Component {
   render () {
     const nombre = this.state.selected ? this.state.selected.nombre : '' // Ternario para comprobar que no es null, que lo es al cargar por primera y hasta que se selecciona alguna celda.
     return (
-      <View>
+      <View style={styles.container}>
         <Text style={styles.title}> { 'Casa seleccionada: ' + nombre } </Text>
         <FlatList
           data ={this.state.list} //La propiedad data espera un array, le paso la lista
+          //renderItem={ (datos) => this.pintaCelda(datos.item,datos.index)} // Recibimos un objeto "datos", luego cogemos las propiedades, o cogemos las propiedades directamente.
           renderItem={ ({item, index}) => this.pintaCelda(item,index)} //Con cada elemento de la lista llamo al pintaCelda
           keyExtractor= { (item,index) => item.id } // un id unico que le tenemos que indicar a Flatlist de cada elemento, en este caso el campo id
           extraData={this.state} //mira en la doc, no refrescaba porque no tenía esto puesto..
@@ -73,6 +75,9 @@ export default class HousesList extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   cell: {
     height: 200, 
     marginVertical: 10
@@ -81,5 +86,17 @@ const styles = StyleSheet.create({
     fontSize:20, 
     textAlign: 'center',
     marginVertical:20
-  }
+  },
+ button:{
+    borderColor: 'black',
+    borderWidth: 1,
+    margin: 20,
+    padding: 10,
+    borderRadius: 12
+ },
+ buttonText:{
+   color: 'black',
+   fontSize: 18,
+   textAlign: 'center'
+ }
 })
